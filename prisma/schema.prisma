@@ -10,16 +10,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
-  id       Int     @id @default(autoincrement())
-  username String  @unique @db.VarChar(30)
-  password String  @db.VarChar(72)
+  id       Int      @id @default(autoincrement())
+  username String   @unique @db.VarChar(30)
+  password String   @db.VarChar(72)
   email    String?
+  role     Role     @default(USER)
   todos    Todo[]
   carts    Cart[]
   orders   Orders[]
+
   @@map("users")
 }
+
+
 
 model Todo {
   id        Int       @id @default(autoincrement())
@@ -39,13 +48,14 @@ enum Status {
   DOING
   DONE
 }
+
 model Product {
   id               Int          @id @default(autoincrement())
   title            String
   description      String
   price_product    Int          @default(0)
   stock_of_product Int          @default(1)
-  category         Category     @relation(fields: [categoryId], references: [id])
+  category         Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   cart_items       Cart_item[]
   order_items      Order_item[]
   categoryId       Int
@@ -57,14 +67,14 @@ model Order_item {
   price     Int     @default(0)
   orders    Orders  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   orderId   Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productId Int
 }
 
 model Category {
   id            Int       @id @default(autoincrement())
   category_name String
-  products       Product[]
+  products      Product[]
 }
 
 model Orders {
@@ -72,7 +82,7 @@ model Orders {
   totalBeforeDiscount Int          @default(0) @map("total_before_discount")
   discount            Int          @default(0)
   total_Amount        Int          @default(0)
-  user                User         @relation(fields: [userId], references: [id])
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId              Int
   order_items         Order_item[]
 }
@@ -88,7 +98,7 @@ enum OrderStatus {
 model Cart {
   id                  Int         @id @default(autoincrement())
   totalBeforeDiscount Int         @default(0) @map("total_before_discount")
-  user                User        @relation(fields: [userId], references: [id])
+  user                User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   cart_items          Cart_item[]
   userId              Int
 }
@@ -97,8 +107,8 @@ model Cart_item {
   id             Int     @id @default(autoincrement())
   quantity       Int     @default(1)
   subtotal_price Int     @default(0)
-  cart           Cart    @relation(fields: [cartId], references: [id])
+  cart           Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   cartId         Int
-  product        Product @relation(fields: [productId], references: [id])
+  product        Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productId      Int
 }
