@@ -1,31 +1,32 @@
 const db = require("../models/db");
+exports.CartItem = async (req, res, next) => {
+  try {
+    const {cartId, productId } = req.body;
+    
 
+    const newCartItem = await db.cart_item.create({
+      data: {
+       
+        cartId,
+        productId
+      },
+    });
+
+    res.json({ message: "Cart item created successfully", newCartItem });
+  } catch (error) {
+    next(error);
+  }
+};
 // Create a new cart item
-exports.createCartItem = async (req, res, next) => {
-    try {
-      const { quantity, subtotal_price, cartId, productId } = req.body;
-  
-      // Validate input data
-      if (!(quantity && subtotal_price && cartId && productId)) {
-        return res.status(400).json({ error: 'Please provide all required fields' });
-      }
-  
-      // Create a new cart item
-      const newCartItem = await db.Cart_item.create({
-        data: {
-          quantity,
-          subtotal_price,
-          cartId,
-          productId
-        }
-      });
-  
-      res.status(201).json({ msg: 'Cart item created successfully', cartItem: newCartItem });
-    } catch (error) {
-      next(error);
-    }
-  };
-  
+
+// exports.getCartItem = async (req, res, next) => {
+//   try {
+//     const cart = await db.cart_item.findMany();
+//     res.json(cart);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 // Get cart item by ID
 exports.getCartItemById = async (req, res, next) => {

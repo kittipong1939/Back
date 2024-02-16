@@ -45,3 +45,28 @@ exports.createCategory = async (req, res, next) => {
       next(error);
     }
   };
+  exports.deleteProduct = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const rs = await db.product.delete({
+        where: { id: +id } // ใช้เฉพาะ id เท่านั้น
+      });
+      res.json({ msg: 'Delete ok', result: rs });
+    } catch (err) {
+      next(err);
+    }
+  };
+  exports.updateProduct = async (req, res, next) => {
+    // validate req.params + req.body
+    const {id} = req.params
+    const data = req.body
+    try {
+      const rs = await db.product.update({
+        data :  {...data},
+         where: { id:+id} 
+      })
+      res.json({msg:'Update ok',result:rs})
+    }catch(err){
+      next(err)
+    }
+  }

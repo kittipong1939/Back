@@ -19,10 +19,10 @@ router.post('/product', AdminController.createProduct)
 router.post('/category', AdminController.createCategory)
 router.get('/category1', authenticate, ProductController.getCategories);
 router.get('/product1', authenticate, ProductController.getProduct);
-
+router.delete('/delete/:id',authenticate,AdminController.deleteProduct)
 // router.post('/create-carts', cartController.createCartItem)
 
-
+router.put('/:id',authenticate,AdminController.updateProduct)
 
 
 // Routes for managing carts
@@ -33,7 +33,7 @@ router.get('/cart1',authenticate, ProductController.getCart1);
 // router.delete('/:cartId', cartController.deleteCart);
 
 // Routes for managing cart items
-router.post('/cart-items', cartItemController.createCartItem);
+router.post('/cart-items', cartItemController.CartItem);
 router.get('/cart2',authenticate, ProductController.getCartItem1);
 router.get('/cart-items/:cartItemId', cartItemController.getCartItemById);
 router.put('/cart-items/:cartItemId', cartItemController.updateCartItem);

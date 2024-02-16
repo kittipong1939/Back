@@ -34,3 +34,25 @@ exports.getCartItem1 = async (req, res, next) => {
     next(error);
   }
 };
+// Import Product model
+
+exports.getProductById = async (req, res, next) => {
+  const productId = req.params.productId; // รับค่า ID ของสินค้าจากพารามิเตอร์ของ URL
+
+  try {
+    // ค้นหาสินค้าตาม ID ที่ระบุ
+    const product = await dbproduct.findByPk(productId);
+
+    // ตรวจสอบว่าพบสินค้าหรือไม่
+    if (product) {
+      // หากพบสินค้า ส่งข้อมูลสินค้ากลับไป
+      res.json(product);
+    } else {
+      // หากไม่พบสินค้า ส่งข้อความว่า "Product not found" กลับไป
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    // หากเกิดข้อผิดพลาดในการค้นหา
+    next(error);
+  }
+};
