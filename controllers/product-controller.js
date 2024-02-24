@@ -1,58 +1,65 @@
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 const db = require("../models/db");
+const ProductService = require("../service/productService");
 
-exports.getCategories = async (req, res, next) => {
-    try {
-      const categories = await db.category.findMany();
-      res.json(categories);
-    } catch (error) {
-      next(error);
-    }
-};
 exports.getProduct = async (req, res, next) => {
   try {
-    const products = await db.product.findMany();
-    res.json(products);
+      const getproduct = await db.product.findMany()
+      res.json(getproduct)
+
   } catch (error) {
-    next(error);
+      next(error)
   }
-};
-exports.getCart1 = async (req, res, next) => {
-  try {
-    const carts = await db.cart.findMany();
-    res.json(carts);
-  } catch (error) {
-    next(error);
-  }
-};
-exports.getCartItem1 = async (req, res, next) => {
-  try {
-    const carts1 = await db.cart_item.findMany();
-    res.json(carts1);
-  } catch (error) {
-    next(error);
-  }
-};
-// Import Product model
+}
 
 exports.getProductById = async (req, res, next) => {
-  const productId = req.params.productId; // รับค่า ID ของสินค้าจากพารามิเตอร์ของ URL
+  try {
+      const { id } = req.params
+      const getProduct = await ProductService.getProductById(id)
+      res.json(getProduct)
+
+  } catch (error) {
+      next(error)
+  }
+}
+
+
+exports.createProduct = async (req, res, next) => {
+  const { name, img, description, price, categoryId } = req.body
 
   try {
-    // ค้นหาสินค้าตาม ID ที่ระบุ
-    const product = await dbproduct.findByPk(productId);
+      const product = await ProductService.createProduct(name, img, description, price,  categoryId)
+      res.json(product)
 
-    // ตรวจสอบว่าพบสินค้าหรือไม่
-    if (product) {
-      // หากพบสินค้า ส่งข้อมูลสินค้ากลับไป
-      res.json(product);
-    } else {
-      // หากไม่พบสินค้า ส่งข้อความว่า "Product not found" กลับไป
-      res.status(404).json({ message: 'Product not found' });
-    }
   } catch (error) {
-    // หากเกิดข้อผิดพลาดในการค้นหา
-    next(error);
+      next(error)
+  }
+}
+
+exports.deleteProduct = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const rs = await db.product.delete({
+      where: { id: +id } // ใช้เฉพาะ id เท่านั้น
+    });
+    res.json({ msg: 'Delete ok', result: rs });
+  } catch (err) {
+    next(err);
   }
 };
+exports.updateProduct = async (req, res, next) => {
+  // validate req.params + req.body
+  const {id} = req.params
+  const data = req.body
+  try {
+    const rs = await db.product.update({
+      data :  {...data},
+       where: { id:+id} 
+    })
+    res.json({msg:'Update ok',result:rs})
+  }catch(err){
+    next(err)
+  }
+}
+

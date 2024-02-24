@@ -1,35 +1,55 @@
 const db = require("../models/db");
+const CartService = require("../service/CartService");
+
+// 
+exports.getCart = async (req, res, next) => {
+  try {
+      const getcart = await db.cart.findMany()
+      res.json(getcart)
+
+  } catch (error) {
+      next(error)
+  }
+}
+
+
 
 
 exports.createCart = async (req, res, next) => {
+  const { total, userId } = req.body
+
   try {
-    const { userId } = req.body;
+      const cart = await CartService.createCart(total,userId)
+      res.json(cart)
 
-    if (!userId) {
-      return res.status(400).json({ error: 'Please provide the user ID' });
-    }
+  } catch (error) {
+      next(error)
+  }
+}
 
-    // Check if the user exists
-    const user = await db.user.findUnique({
-      where: {
-        id: userId
+exports.updateCart = async (req, res, next) => {
+  // validate req.params + req.body
+  const {id} = req.params
+  const data = req.body
+  try {
+    const rs = await db.cart.update({
+      data :  {...data},
+       where: { id:+id} 
+    })
+    res.json({msg:'Update ok',result:rs})
+  }catch(err){
+    next(err)
+  }
+}
+exports.getCartlast = async (req, res, next) => {
+  try {
+    const latestOrder = await db.cart.findFirst({
+      orderBy: {
+        id: 'desc'
       }
     });
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Create the cart
-    const cart = await db.cart.create({
-      data: {
-        userId
-      }
-    });
-
-    res.status(201).json({ message: 'Cart created successfully', cart });
+    res.json(latestOrder);
   } catch (error) {
     next(error);
   }
-};
-
+}
