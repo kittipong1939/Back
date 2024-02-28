@@ -8,3 +8,12 @@ exports.createCart = (total, userId) => {
       },
     });
   };
+
+exports.getCart = (userId) => {
+  return prisma.cart.findFirst({
+    where: {
+      userId,
+      status: 'WAITING'
+    }
+  })
+}

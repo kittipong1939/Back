@@ -4,7 +4,11 @@ const CartService = require("../service/CartService");
 // 
 exports.getCart = async (req, res, next) => {
   try {
-      const getcart = await db.cart.findMany()
+      const getcart = await db.cart.findMany({
+        where : {
+          userId : req.user.id
+        }
+      })
       res.json(getcart)
 
   } catch (error) {
@@ -16,10 +20,10 @@ exports.getCart = async (req, res, next) => {
 
 
 exports.createCart = async (req, res, next) => {
-  const { total, userId } = req.body
+  const { total } = req.body
 
   try {
-      const cart = await CartService.createCart(total,userId)
+      const cart = await CartService.createCart(total,req.user.id)
       res.json(cart)
 
   } catch (error) {

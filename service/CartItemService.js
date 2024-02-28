@@ -6,6 +6,7 @@ exports.createCartItem = (quantity, cartId,productId) => {
           quantity,
           cartId,
           productId
+          
       },
     });
   };

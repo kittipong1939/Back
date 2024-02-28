@@ -1,13 +1,18 @@
 const db = require("../models/db");
 const CartItemService = require("../service/CartItemService");
-
+const CartService = require("../service/CartService");
 
 exports.createCartItem = async (req, res, next) => {
   const { quantity,cartId,productId } = req.body
+  // console.log(req.body);
+  
 
   try {
-      const Cart_item = await CartItemService.createCartItem(quantity,cartId,productId)
-      res.json(Cart_item)
+    const hasCart = await CartService.getCart(req.user.id)
+    if (hasCart) {
+      await CartItemService.createCartItem(quantity, hasCart.id, productId)
+    }
+    res.json({message: 'Add to cart Success'})
 
   } catch (error) {
       next(error)
@@ -17,7 +22,9 @@ exports.createCartItem = async (req, res, next) => {
 
 exports.getCartItem = async (req, res, next) => {
   try {
-      const getcartitem = await db.cart_item.findMany()
+      const getcartitem = await db.cart_item.findMany({
+        
+      })
       res.json(getcartitem)
 
   } catch (error) {

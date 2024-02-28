@@ -5,10 +5,11 @@ const CartItemController = require('../controllers/cart-item-controller')
 
 
 
-router.post('/', CartItemController.createCartItem);
+router.post('/', authenticate,CartItemController.createCartItem);
 
 router.get('/',authenticate, CartItemController.getCartItem);
 router.put('/:id',authenticate, CartItemController.updateCartItem);
+
 
 router.delete('/:id',authenticate, CartItemController.deleteCartItem);
 module.exports = router
