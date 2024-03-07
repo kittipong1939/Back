@@ -15,10 +15,6 @@ exports.getCart = async (req, res, next) => {
       next(error)
   }
 }
-
-
-
-
 exports.createCart = async (req, res, next) => {
   const { total } = req.body
 
@@ -30,7 +26,6 @@ exports.createCart = async (req, res, next) => {
       next(error)
   }
 }
-
 exports.updateCart = async (req, res, next) => {
   // validate req.params + req.body
   const {id} = req.params

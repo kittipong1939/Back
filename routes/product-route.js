@@ -6,7 +6,7 @@ const AdminController = require('../controllers/admin-controller')
 
 router.post('/', ProductController.createProduct);
 
-router.get('/all', authenticate, ProductController.getProduct);
+router.get('/all',  ProductController.getProduct);
 
 router.get('/:id',  ProductController.getProductById);
 

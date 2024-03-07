@@ -6,13 +6,8 @@ const AdminController = require('../controllers/admin-controller')
 
 
 router.post('/register', authController.register)
-
-
-
 router.post('/login', authController.login)
 router.get('/me', authenticate, authController.getme) 
-
-
-router.get('/category', authenticate, AdminController.getCategories);
+router.get('/category',  AdminController.getCategories);
 
 module.exports = router

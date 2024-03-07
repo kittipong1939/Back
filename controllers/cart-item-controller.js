@@ -3,10 +3,8 @@ const CartItemService = require("../service/CartItemService");
 const CartService = require("../service/CartService");
 
 exports.createCartItem = async (req, res, next) => {
-  const { quantity,cartId,productId } = req.body
+  const { quantity,productId } = req.body
   // console.log(req.body);
-  
-
   try {
     const hasCart = await CartService.getCart(req.user.id)
     if (hasCart) {
